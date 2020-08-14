@@ -6,21 +6,21 @@ CREATE USER miusuario WITH PASSWORD 'kc2h82T4';
 CREATE DATABASE eventos WITH OWNER miusuario;
 
 \c eventos
-CREATE TABLE events (id INTEGER PRIMARY KEY, categoria VARCHAR,lugar VARCHAR, direccion VARCHAR, inicio date, fin date, virtual BOOLEAN );
 
-CREATE TABLE events (id INTEGER PRIMARY KEY SERIAL, categoria VARCHAR,lugar VARCHAR, direccion VARCHAR, inicio date, fin date, virtual BOOLEAN, dueno VARCHAR);
+CREATE TABLE events (id SERIAL, categoria VARCHAR,lugar VARCHAR, direccion VARCHAR, inicio date, fin date, virtual BOOLEAN, dueno VARCHAR);
 
-ALTER USER myuser WITH SUPERUSER;
+ALTER USER miusuario WITH SUPERUSER;
  ALTER TABLE events ADD COLUMN dueno VARCHAR;
  CREATE SEQUENCE events_id_seq;
  ALTER SEQUENCE events_id_seq OWNED BY events.id;
 ----
-CREATE TABLE usuarios (correo VARCHAR PRIMARY KEY, contrasena VARCHAR);
+CREATE TABLE usuarios (username VARCHAR,  firstname VARCHAR, last_name VARCHAR, email VARCHAR, password VARCHAR);
 
 
 
 
 INSERT INTO events(categoria, lugar, direccion, inicio, fin, virtual, dueno) VALUES('Conferencia', 'salon','calle1', '1971-07-13', '1971-07-14',FALSE,'12345');
 
+INSERT INTO events(categoria, lugar, direccion, inicio, fin, virtual, dueno) VALUES($1, 'salon','calle1', '1971-07-13', '1971-07-14',FALSE,'12345');
 
 CREATE TABLE hola (id INTEGER PRIMARY KEY, categoria VARCHAR);

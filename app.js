@@ -1,5 +1,7 @@
 const express = require('express');
 const { Client } = require('pg');
+const jwt = require('jsonwebtoken');
+const bycript = require('bcrypt');
 const client = new Client({
   user: 'miusuario',
   host: 'localhost',
@@ -97,18 +99,74 @@ app.delete('/api/events/:id', function (req, res) {
     .finally(() => client.end());
 });
 
-app.post('/api/create-user/', function (req, res) {
+app.post('/api/create-user/', async function (req, res) {
+  try {
+    const salt = await bycript.genSalt();
+    const hashedPassword = await bycript.hash(req.body.password, salt);
+    client
+      .connect()
+      .then(() => console.log('Connected sucesfully'))
+      .then(() =>
+        client.query(
+          `INSERT INTO usuarios(username, firstname, last_name, email, password) VALUES($1, $2,$3,$4,$5);`,
+          [
+            req.body.username,
+            req.body.first_name,
+            req.body.last_name,
+            req.body.email,
+            hashedPassword,
+          ]
+        )
+      )
+      .then((results) => res.send('Ok'))
+      .catch((e) => console.log(e))
+      .finally(() => client.end());
+  } catch {
+    res.status(500).send();
+  }
+
   req.body.username;
   req.body.first_name;
   req.body.last_name;
   req.body.email;
+  req.body.password;
 });
 
 app.post('/api/api_auth/', function (req, res) {
   req.body.username;
-  req.body.first_name;
-  req.body.last_name;
-  req.body.email;
+  req.body.password;
+  client
+    .connect()
+    .then(() => console.log('Connected sucesfully'))
+    .then(() =>
+      client.query(`select * from usuarios where username = $1`, [
+        req.body.username,
+      ])
+    )
+    .then((results) => {
+      console.log(results.rows[0].password);
+      if (results.rows.length == 0) {
+        return res.status(400).send('cannot find user');
+      }
+      bycript.compare(req.body.password, results.rows[0].password, function (
+        err,
+        resp
+      ) {
+        if (err) {
+          // handle error
+          res.status(500).send();
+        }
+        if (resp) {
+          res.send('ok');
+          //JWT
+        } else {
+          // response is OutgoingMessage object that server response http request
+          return res.send('no coinciden');
+        }
+      });
+    })
+    .catch((e) => console.log(e))
+    .finally(() => client.end());
 });
 app.listen(port, () => {
   console.log(`Example app listening at http://localhost:${port}`);

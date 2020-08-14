@@ -17,8 +17,11 @@
   },
   "homepage": "https://github.com/lfnaranjo11/ABC_company#readme",
   "dependencies": {
+    "bcrypt": "^5.0.0",
     "body-parser": "^1.19.0",
+    "dotenv": "^8.2.0",
     "express": "^4.17.1",
+    "jsonwebtoken": "^8.5.1",
     "pg": "^8.3.0",
     "pgtools": "^0.3.0",
     "postgres": "^1.0.2"
