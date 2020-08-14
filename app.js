@@ -1,4 +1,5 @@
 const express = require('express');
+require('dotenv').config();
 const { Client } = require('pg');
 const jwt = require('jsonwebtoken');
 const bycript = require('bcrypt');
@@ -13,11 +14,12 @@ const client = new Client({
 const app = express();
 const port = 8080;
 var bodyParser = require('body-parser');
-app.get('/api/events', (req, res) => {
+app.get('/api/events', authenticaToken, (req, res) => {
+  console.log('QQQQQ');
   client
     .connect()
     .then(() => console.log('Connected sucesfully'))
-    .then(() => client.query(`select * from events`))
+    .then(() => client.query(`select * from events where dueno=$1`, [req.user]))
     .then((results) => {
       res.json(JSON.parse(JSON.stringify(results.rows)));
     })
@@ -157,7 +159,12 @@ app.post('/api/api_auth/', function (req, res) {
           res.status(500).send();
         }
         if (resp) {
-          res.send('ok');
+          //JWT
+          const accesstoken = jwt.sign(
+            req.body.username,
+            process.env.ACCESS_TOKEN_SECRET
+          );
+          res.json({ accesstoken });
           //JWT
         } else {
           // response is OutgoingMessage object that server response http request
@@ -168,6 +175,22 @@ app.post('/api/api_auth/', function (req, res) {
     .catch((e) => console.log(e))
     .finally(() => client.end());
 });
+
+function authenticaToken(req, resp, next) {
+  const authHeader = req.headers['authorization'];
+  const token = authHeader && authHeader.split(' ')[1];
+  console.log(token);
+  if (token == null) return resp.sendStatus(401);
+  jwt.verify(token, process.env.ACCESS_TOKEN_SECRET, (err, user) => {
+    if (err) return resp.sendStatus(403);
+    console.log('QQQQQ');
+    req.user = user;
+    console.log('QQQQQ1');
+    console.log(user);
+    next();
+    console.log('QQQQQ2');
+  });
+}
 app.listen(port, () => {
   console.log(`Example app listening at http://localhost:${port}`);
 });

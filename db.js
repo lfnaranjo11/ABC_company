@@ -10,7 +10,7 @@ const client = new Client({
 client
   .connect()
   .then(() => console.log('Connected sucesfully'))
-  .then(() => client.query(`select * from usuarios`))
+  .then(() => client.query(`select * from events`))
   .then((results) => console.table(results.rows))
   .catch((e) => console.log(e))
   .finally(() => client.end());
