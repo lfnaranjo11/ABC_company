@@ -150,6 +150,6 @@ function authenticaToken(req, resp, next) {
   });
 }
 app.listen(port, () => {
-  client.connect();
+  client.connect().then(() => console.log('connected to database'));
   console.log(`Example app listening at http://localhost:${port}`);
 });
