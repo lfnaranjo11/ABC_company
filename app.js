@@ -81,11 +81,14 @@ app.post('/api/events/', authenticaToken, (req, res) => {
 app.delete('/api/events/:id', authenticaToken, function (req, res) {
   console.log(`user ${req.user} wants to delete`);
   client
-    .query(`DELETE FROM events WHERE id=$1 AND dueno=$2`, [
-      req.params.id,
-      req.user,
-    ])
-    .then((results) => console.table(results.rows), res.send('Ok'))
+    .query(
+      `DELETE FROM events WHERE id=$1 AND dueno=$2 RETURNING id,categoria as event_category, lugar AS event_place, direccion AS event_address, inicio AS event_initial_date, fin AS event_final_date, virtual AS event_type`,
+      [req.params.id, req.user]
+    )
+    .then(
+      (results) => res.json(JSON.parse(JSON.stringify(results.rows))),
+      res.send('Ok')
+    )
     .catch((e) => console.log(e));
 });
 
