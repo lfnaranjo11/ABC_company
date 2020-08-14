@@ -96,7 +96,7 @@ app.post('/api/create-user/', async function (req, res) {
 
     client
       .query(
-        `INSERT INTO usuarios(username, firstname, last_name, email, password) VALUES($1, $2,$3,$4,$5);`,
+        `INSERT INTO usuarios(username, firstname, last_name, email, password) VALUES($1, $2,$3,$4,$5) RETURNING username,firstname AS first_name, last_name, email;`,
         [
           req.body.username,
           req.body.first_name,
@@ -105,7 +105,7 @@ app.post('/api/create-user/', async function (req, res) {
           hashedPassword,
         ]
       )
-      .then((results) => res.send('Ok'))
+      .then((results) => res.json(JSON.parse(JSON.stringify(results.rows))))
       .catch((e) => console.log(e));
   } catch {
     res.status(500).send();
