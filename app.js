@@ -96,6 +96,20 @@ app.delete('/api/events/:id', function (req, res) {
     .catch((e) => console.log(e))
     .finally(() => client.end());
 });
+
+app.post('/api/create-user/', function (req, res) {
+  req.body.username;
+  req.body.first_name;
+  req.body.last_name;
+  req.body.email;
+});
+
+app.post('/api/api_auth/', function (req, res) {
+  req.body.username;
+  req.body.first_name;
+  req.body.last_name;
+  req.body.email;
+});
 app.listen(port, () => {
   console.log(`Example app listening at http://localhost:${port}`);
 });
