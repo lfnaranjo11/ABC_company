@@ -16,16 +16,22 @@ var bodyParser = require('body-parser');
 
 app.get('/api/events', authenticaToken, (req, res) => {
   client
-    .query(`select * from events where dueno=$1`, [req.user])
+    .query(
+      `select id,categoria as event_category, lugar AS event_place, direccion AS event_address, inicio AS event_initial_date, fin AS event_final_date, virtual AS event_type from events where dueno=$1 `,
+      [req.user]
+    )
     .then((results) => {
       res.json(JSON.parse(JSON.stringify(results.rows)));
     })
     .catch((e) => res.status(400));
 });
 
-app.get('/api/events/:id', (req, res) => {
+app.get('/api/events/:id', authenticaToken, (req, res) => {
   client
-    .query(`select * from events where id=$1`, [req.params.id])
+    .query(
+      `select id,categoria as event_category, lugar AS event_place, direccion AS event_address, inicio AS event_initial_date, fin AS event_final_date, virtual AS event_type from events where id=$1 AND dueno=$2`,
+      [req.params.id, req.user]
+    )
     .then((results) => {
       res.json(JSON.parse(JSON.stringify(results.rows)));
     })
@@ -33,11 +39,12 @@ app.get('/api/events/:id', (req, res) => {
 });
 app.use(bodyParser.json());
 
-app.put('/api/events/:id', (req, res) => {
+app.put('/api/events/:id', authenticaToken, (req, res) => {
   //TO-DO checkear el valor anterior si el body no viene completo y computar el update con los valores anteriores
   client
     .query(
-      `UPDATE events SET (categoria, lugar, direccion, inicio, fin, virtual) =($1, $2,$3, $4,$5,$6) WHERE id=$7;`,
+      `UPDATE events SET (categoria, lugar, direccion, inicio, fin, virtual) =($1, $2,$3, $4,$5,$6) WHERE id=$7 AND dueno=$8 
+      RETURNING id,categoria as event_category, lugar AS event_place, direccion AS event_address, inicio AS event_initial_date, fin AS event_final_date, virtual AS event_type;`,
       [
         req.body.event_category,
         req.body.event_place,
@@ -46,16 +53,17 @@ app.put('/api/events/:id', (req, res) => {
         req.body.event_final_date,
         req.body.event_type,
         req.params.id,
+        req.user,
       ]
     )
-    .then((results) => res.send('ok'))
+    .then((results) => res.json(JSON.parse(JSON.stringify(results.rows))))
     .catch((e) => res.status(400));
 });
 
-app.post('/api/events/', (req, res) => {
+app.post('/api/events/', authenticaToken, (req, res) => {
   client
     .query(
-      `INSERT INTO events(categoria, lugar, direccion, inicio, fin, virtual, dueno) VALUES($1, $2,$3, $4,$5,$6,$7);`,
+      `INSERT INTO events(categoria, lugar, direccion, inicio, fin, virtual, dueno) VALUES($1, $2,$3, $4,$5,$6,$7) RETURNING id,categoria as event_category, lugar AS event_place, direccion AS event_address, inicio AS event_initial_date, fin AS event_final_date, virtual AS event_type;`,
       [
         req.body.event_category,
         req.body.event_place,
@@ -63,18 +71,21 @@ app.post('/api/events/', (req, res) => {
         req.body.event_initial_date,
         req.body.event_final_date,
         req.body.event_type,
-        req.body.owner,
+        req.user,
       ]
     )
-    .then((results) => console.log(results), res.status(200), res.send('ok'))
+    .then((results) => res.json(JSON.parse(JSON.stringify(results.rows))))
     .catch((e) => console.log(e), res.status(400));
 });
 
-app.delete('/api/events/:id', function (req, res) {
-  res.send('Got a DELETE request at /user');
+app.delete('/api/events/:id', authenticaToken, function (req, res) {
+  console.log(`user ${req.user} wants to delete`);
   client
-    .query(`DELETE FROM events WHERE id=$1`, [req.params.id])
-    .then((results) => res.send('Ok'))
+    .query(`DELETE FROM events WHERE id=$1 AND dueno=$2`, [
+      req.params.id,
+      req.user,
+    ])
+    .then((results) => console.table(results.rows), res.send('Ok'))
     .catch((e) => console.log(e));
 });
 
@@ -101,7 +112,7 @@ app.post('/api/create-user/', async function (req, res) {
   }
 });
 
-app.post('/api/api_auth/', function (req, res) {
+app.post('/api/api-auth/', function (req, res) {
   client
     .query(`select * from usuarios where username = $1`, [req.body.username])
     .then((results) => {
@@ -141,15 +152,11 @@ function authenticaToken(req, resp, next) {
   if (token == null) return resp.sendStatus(401);
   jwt.verify(token, process.env.ACCESS_TOKEN_SECRET, (err, user) => {
     if (err) return resp.sendStatus(403);
-    console.log('QQQQQ');
     req.user = user;
-    console.log('QQQQQ1');
-    console.log(user);
     next();
-    console.log('QQQQQ2');
   });
 }
 app.listen(port, () => {
   client.connect().then(() => console.log('connected to database'));
-  console.log(`Example app listening at http://localhost:${port}`);
+  console.log(`company ABC server listening at http://localhost:${port}`);
 });
