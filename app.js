@@ -85,10 +85,7 @@ app.delete('/api/events/:id', authenticaToken, function (req, res) {
       `DELETE FROM events WHERE id=$1 AND dueno=$2 RETURNING id,categoria as event_category, lugar AS event_place, direccion AS event_address, inicio AS event_initial_date, fin AS event_final_date, virtual AS event_type`,
       [req.params.id, req.user]
     )
-    .then(
-      (results) => res.json(JSON.parse(JSON.stringify(results.rows))),
-      res.send('Ok')
-    )
+    .then((results) => res.json(JSON.parse(JSON.stringify(results.rows))))
     .catch((e) => console.log(e));
 });
 
