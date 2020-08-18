@@ -13,6 +13,33 @@ const client = new Client({
 const app = express();
 const port = 8080;
 var bodyParser = require('body-parser');
+app.use(function (req, res, next) {
+  // Website you wish to allow to connect
+  res.setHeader('Access-Control-Allow-Origin', '*');
+
+  // Request methods you wish to allow
+  res.setHeader(
+    'Access-Control-Allow-Methods',
+    'GET, POST, OPTIONS, PUT, PATCH, DELETE'
+  );
+
+  // Request headers you wish to allow
+  res.setHeader(
+    'Access-Control-Allow-Headers',
+    'X-Requested-With,content-type'
+  );
+
+  // Set to true if you need the website to include cookies in the requests sent
+  // to the API (e.g. in case you use sessions)
+  res.setHeader('Access-Control-Allow-Credentials', true);
+
+  // Pass to next layer of middleware
+  next();
+});
+app.post('/home', (req, res) => {
+  //res.status(200).json({ resp: 'OK' });
+  res.status(404).json({ resp: 'ok' });
+});
 
 app.get('/api/events', authenticaToken, (req, res) => {
   client
@@ -134,11 +161,13 @@ app.post('/api/api-auth/', function (req, res) {
             req.body.username,
             process.env.ACCESS_TOKEN_SECRET
           );
-          res.json({ accesstoken });
+          console.log('au');
+          res.status(200).json({ accesstoken });
+
           //JWT
         } else {
           // response is OutgoingMessage object that server response http request
-          return res.send('no coinciden');
+          return res.status(400).send('no coinciden');
         }
       });
     })

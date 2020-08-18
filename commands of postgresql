@@ -17,8 +17,8 @@ ALTER USER miusuario WITH SUPERUSER;
 CREATE TABLE usuarios (username VARCHAR,  firstname VARCHAR, last_name VARCHAR, email VARCHAR, password VARCHAR);
 
 
-ALTER TABLE table_name
-ADD CONSTRAINT constraint_name UNIQUE (column1, column2, ... column_n);
+ALTER TABLE usuarios
+ADD CONSTRAINT unicos UNIQUE (username, email);
 
 
 
