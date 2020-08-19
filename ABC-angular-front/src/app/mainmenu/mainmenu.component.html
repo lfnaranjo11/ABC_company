@@ -11,6 +11,7 @@
           (click)="openForEdit(evento)"
           [class.active]="evento === selectedEvento"
         >
+          {{ evento.id }}
           En:{{ evento.event_place }} Dirección:
           {{ evento.event_address }} Desde:
           {{ evento.event_initial_date }} Hasta: {{ evento.event_initial_date }}

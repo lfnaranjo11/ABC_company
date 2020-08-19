@@ -3,7 +3,7 @@ import { HttpClient } from '@angular/common/http';
 import { Observable, throwError } from 'rxjs';
 import { catchError, retry } from 'rxjs/operators';
 import { HttpHeaders } from '@angular/common/http';
-import { Evento } from '../models/evento';
+import { Evento, Evento_post } from '../models/evento';
 
 @Component({
   selector: 'app-mainmenu',
@@ -35,6 +35,7 @@ export class MainmenuComponent implements OnInit {
           let end_date: Date = new Date(element.event_final_date);
           this.eventosArray.push({
             id: element.id,
+            event_category: element.event_category,
             event_place: element.event_place,
             event_address: element.event_address,
             event_initial_date: init_date.toDateString(),
@@ -52,23 +53,39 @@ export class MainmenuComponent implements OnInit {
   };
 
   postEvento(): void {
+    this.httpOptions.headers.set('Content-Type', 'application/json');
+
     this.http
       .post(this.rootURL, this.selectedEvento, this.httpOptions)
       .subscribe((data) => {
-        console.log(data);
+        console.log('resultado', data);
       });
   }
   addOrEdit() {
     if (this.selectedEvento.id === 0) {
       //post new
+      this.postEvento();
       this.selectedEvento.id = 0;
       this.eventosArray.push(this.selectedEvento);
     } else {
       //put con los datos especificados
+      console.log('aqui here');
+      this.putEvento();
     }
     this.selectedEvento = new Evento();
   }
 
+  putEvento() {
+    this.httpOptions.headers.set('Content-Type', 'application/json');
+
+    this.http
+      .put(
+        this.rootURL + `/${this.selectedEvento.id}`,
+        this.selectedEvento,
+        this.httpOptions
+      )
+      .subscribe((data) => console.log(data));
+  }
   openForEdit(evento: Evento) {
     this.selectedEvento = evento;
   }
@@ -77,6 +94,9 @@ export class MainmenuComponent implements OnInit {
       this.eventosArray = this.eventosArray.filter(
         (evento) => evento != this.selectedEvento
       );
+      this.http
+        .delete(this.rootURL + `/${this.selectedEvento.id}`, this.httpOptions)
+        .subscribe();
       //delete
     }
   }
