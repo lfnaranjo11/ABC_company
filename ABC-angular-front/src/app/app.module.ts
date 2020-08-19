@@ -1,5 +1,9 @@
 import { BrowserModule } from '@angular/platform-browser';
-import { NgModule } from '@angular/core';
+import {
+  NgModule,
+  CUSTOM_ELEMENTS_SCHEMA,
+  NO_ERRORS_SCHEMA,
+} from '@angular/core';
 
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
@@ -8,8 +12,10 @@ import { HomeComponent } from './home/home.component';
 import { RouterModule } from '@angular/router';
 import { MainmenuComponent } from './mainmenu/mainmenu.component';
 import { HttpClientModule } from '@angular/common/http';
+import { FormsModule } from '@angular/forms';
 
 @NgModule({
+  schemas: [CUSTOM_ELEMENTS_SCHEMA, NO_ERRORS_SCHEMA],
   declarations: [
     AppComponent,
     LoginComponent,
@@ -18,6 +24,7 @@ import { HttpClientModule } from '@angular/common/http';
   ],
   imports: [
     BrowserModule,
+    FormsModule,
     HttpClientModule,
     AppRoutingModule,
     RouterModule.forRoot([
@@ -26,7 +33,7 @@ import { HttpClientModule } from '@angular/common/http';
       { path: 'mainmenu', component: MainmenuComponent },
     ]),
   ],
-  providers: [],
+
   bootstrap: [AppComponent],
 })
 export class AppModule {}

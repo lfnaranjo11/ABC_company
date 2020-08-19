@@ -1,1 +1,69 @@
-<p>lo del otro video</p>
+<nav class="navbar navbar-dark bg-primary">
+  <a class="navbar-brand" href="/">CRUD ABC Company Events</a>
+</nav>
+<div class="container">
+  <div class="row">
+    <div class="col-md-8 mt-4">
+      <ul class="list-group">
+        <li
+          *ngFor="let evento of eventosArray"
+          class="list-group-item list-group-item-action"
+          (click)="openForEdit(evento)"
+          [class.active]="evento === selectedEvento"
+        >
+          En:{{ evento.event_place }} Dirección:
+          {{ evento.event_address }} Desde:
+          {{ evento.event_initial_date }} Hasta: {{ evento.event_initial_date }}
+        </li>
+      </ul>
+    </div>
+    <div class="card mt-4">
+      <div class="card-body">
+        <div class="card-tittle">Crear un evento</div>
+        <div class="form-group">
+          <input
+            type="text"
+            [(ngModel)]="selectedEvento.event_place"
+            placeholder="lugar"
+            class="form-control"
+          />
+          <input
+            type="text"
+            [(ngModel)]="selectedEvento.event_address"
+            placeholder="direccion"
+            class="form-control"
+          />
+          <input type="text" placeholder="fecha Inicial" class="form-control" />
+          <input type="text" placeholder="fecha  final" class="form-control" />
+          <button (click)="addOrEdit()" class="btn-primary">Submit</button>
+          <button
+            *ngIf="selectedEvento.id !== 0"
+            (click)="deleteEvento()"
+            class="btn btn-danger"
+          >
+            DELETE
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+<div class="container">
+  <div class="row">
+    <div class="col-sm-6">
+      <div class="form-group">
+        <div class="input-group date" id="datetimepicker1">
+          <input type="text" class="form-control" />
+          <span class="input-group-addon">
+            <span class="glyphicon glyphicon-calendar"></span>
+          </span>
+        </div>
+      </div>
+    </div>
+    <script type="text/javascript">
+      $(function () {
+        $("#datetimepicker1").datetimepicker();
+      });
+    </script>
+  </div>
+</div>
