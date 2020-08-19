@@ -4,7 +4,7 @@ import { Observable, throwError } from 'rxjs';
 import { catchError, retry } from 'rxjs/operators';
 import { HttpHeaders } from '@angular/common/http';
 import { Router } from '@angular/router';
-
+import { UsuarioCorto } from './models/usuario';
 interface mydata {
   accesstoken: string;
 }
@@ -19,10 +19,7 @@ export class AuthService {
       'Content-Type': 'application/json',
     }),
   };
-  usario = {
-    username: 'fonaranjo',
-    password: '1',
-  };
+  usuario: UsuarioCorto = new UsuarioCorto();
 
   // httpOptions.headers.set('Authorization', 'my-new-auth-token');
   rootURl = 'http://localhost:8080/api/api-auth';
@@ -30,17 +27,28 @@ export class AuthService {
     //post these details to API server return user info if correct
     // return this.http.post(this.rootURl, this.httpOptions);
     //this.http.post(this.rootURl, this.httpOptions);
-    this.usario.username = username;
-    this.usario.password = password;
-
+    this.usuario.username = username;
+    this.usuario.password = password;
     return this.http
-      .post<mydata>(this.rootURl, this.usario, this.httpOptions)
-      .subscribe((data) => {
-        this.router.navigate(['mainmenu']);
-        console.log(data.accesstoken);
-        //  console.log('khe sad :,(', data);
-      });
+      .post<mydata>(this.rootURl, this.usuario, this.httpOptions)
+      .subscribe(
+        (data) => {
+          this.router.navigate(['mainmenu']);
+          console.log(data.accesstoken);
+          localStorage.setItem('token', data.accesstoken);
+          //  console.log('khe sad :,(', data);
+        },
+        (err) => {
+          console.log(err);
+        }
+      );
 
     // .subscribe((data) => console.log(data, 'is what we got'));
+  }
+  isLoggedIn() {
+    return !!localStorage.getItem('token');
+  }
+  logOut() {
+    localStorage.removeItem('token');
   }
 }

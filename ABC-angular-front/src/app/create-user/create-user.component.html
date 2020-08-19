@@ -1,0 +1,56 @@
+<div class="row">
+  <div class="card mt-4">
+    <div class="card-header">sign up</div>
+    <div class="card-body">
+      <form (submit)="create()">
+        <div class="form-group">
+          <input
+            name="sometihng"
+            type="text"
+            placeholder="nombre de usuario"
+            class="form-control"
+            [(ngModel)]="nuevo_usuario.username"
+            required
+            autofocus
+          />
+          <input
+            name="sometihng"
+            type="text"
+            [(ngModel)]="nuevo_usuario.first_name"
+            placeholder="nombre"
+            class="form-control"
+            required
+          />
+          <input
+            name="sometihng"
+            type="text"
+            placeholder="apellidos"
+            [(ngModel)]="nuevo_usuario.last_name"
+            class="form-control"
+            required
+          />
+          <input
+            name="sometihng"
+            type="text"
+            placeholder="correo"
+            class="form-control"
+            [(ngModel)]="nuevo_usuario.email"
+            required
+          />
+          <input
+            name="sometihng"
+            type="password"
+            placeholder="contraseña"
+            [(ngModel)]="nuevo_usuario.password"
+            class="form-control"
+            required
+          />
+
+          <button type="submit" (click)="create()" class="btn-primary">
+            Submit
+          </button>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>

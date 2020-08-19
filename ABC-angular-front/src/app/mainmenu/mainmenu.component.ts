@@ -15,10 +15,6 @@ export class MainmenuComponent implements OnInit {
   selectedEvento: Evento = new Evento();
   rootURL = 'http://localhost:8080/api/events';
   constructor(private http: HttpClient) {
-    this.httpOptions.headers.set(
-      'Authorization',
-      'Token eyJhbGciOiJIUzI1NiJ9.Zm9uYXJhbmpv.2PEnK4jiCRBuE2FWe5J-hhcIzA8sw8FogVa9ciKlrMY'
-    );
     this.http
       .get<Evento[]>(this.rootURL, this.httpOptions)
       .subscribe((data) => {
@@ -46,10 +42,7 @@ export class MainmenuComponent implements OnInit {
       });
   }
   httpOptions = {
-    headers: new HttpHeaders({
-      Authorization:
-        'Token eyJhbGciOiJIUzI1NiJ9.Zm9uYXJhbmpv.2PEnK4jiCRBuE2FWe5J-hhcIzA8sw8FogVa9ciKlrMY',
-    }),
+    headers: new HttpHeaders(),
   };
 
   postEvento(): void {
@@ -100,8 +93,5 @@ export class MainmenuComponent implements OnInit {
       //delete
     }
   }
-  //this.httpOptions.headers.set('Authorization', 'my-new-auth-token');
-  ngOnInit(): void {
-    // this.httpOptions.headers.set('Authorization', `token ${token}`);
-  }
+  ngOnInit(): void {}
 }
