@@ -20,6 +20,8 @@ CREATE TABLE usuarios (username VARCHAR,  firstname VARCHAR, last_name VARCHAR, 
 ALTER TABLE usuarios
 ADD CONSTRAINT unicos UNIQUE (username, email);
 
+ALTER TABLE events
+ADD event_name VARCHAR; 
 
 
 INSERT INTO events(categoria, lugar, direccion, inicio, fin, virtual, dueno) VALUES('Conferencia', 'salon','calle1', '1971-07-13', '1971-07-14',FALSE,'12345');

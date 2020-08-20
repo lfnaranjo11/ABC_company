@@ -41,23 +41,23 @@ app.post('/home', (req, res) => {
 app.get('/api/events', authenticaToken, (req, res) => {
   client
     .query(
-      `select id,categoria as event_category, lugar AS event_place, direccion AS event_address, inicio AS event_initial_date, fin AS event_final_date, virtual AS event_type from events where dueno=$1 `,
+      `select id,event_name,categoria as event_category, lugar AS event_place, direccion AS event_address, inicio AS event_initial_date, fin AS event_final_date, virtual AS event_type from events where dueno=$1 `,
       [req.user]
     )
     .then((results) => {
-      res.json(JSON.parse(JSON.stringify(results.rows)));
+      res.status(200).json(JSON.parse(JSON.stringify(results.rows)));
     })
-    .catch((e) => res.status(400));
+    .catch((e) => console.log(e), res.status(400));
 });
 
 app.get('/api/events/:id', authenticaToken, (req, res) => {
   client
     .query(
-      `select id,categoria as event_category, lugar AS event_place, direccion AS event_address, inicio AS event_initial_date, fin AS event_final_date, virtual AS event_type from events where id=$1 AND dueno=$2`,
+      `select id,event_name,categoria as event_category, lugar AS event_place, direccion AS event_address, inicio AS event_initial_date, fin AS event_final_date, virtual AS event_type from events where id=$1 AND dueno=$2`,
       [req.params.id, req.user]
     )
     .then((results) => {
-      res.json(JSON.parse(JSON.stringify(results.rows)));
+      res.status(200).json(JSON.parse(JSON.stringify(results.rows)));
     })
     .catch((e) => res.status(400));
 });
@@ -67,9 +67,10 @@ app.put('/api/events/:id', authenticaToken, (req, res) => {
   //TO-DO checkear el valor anterior si el body no viene completo y computar el update con los valores anteriores
   client
     .query(
-      `UPDATE events SET (categoria, lugar, direccion, inicio, fin, virtual) =($1, $2,$3, $4,$5,$6) WHERE id=$7 AND dueno=$8 
-      RETURNING id,categoria as event_category, lugar AS event_place, direccion AS event_address, inicio AS event_initial_date, fin AS event_final_date, virtual AS event_type;`,
+      `UPDATE events SET (event_name,categoria, lugar, direccion, inicio, fin, virtual) =($1, $2,$3, $4,$5,$6,$7) WHERE id=$8 AND dueno=$9 
+      RETURNING id,event_name,categoria as event_category, lugar AS event_place, direccion AS event_address, inicio AS event_initial_date, fin AS event_final_date, virtual AS event_type;`,
       [
+        req.body.event_name,
         req.body.event_category,
         req.body.event_place,
         req.body.event_address,
@@ -80,15 +81,18 @@ app.put('/api/events/:id', authenticaToken, (req, res) => {
         req.user,
       ]
     )
-    .then((results) => res.json(JSON.parse(JSON.stringify(results.rows))))
+    .then((results) =>
+      res.status(200).json(JSON.parse(JSON.stringify(results.rows)))
+    )
     .catch((e) => res.status(400));
 });
 
 app.post('/api/events/', authenticaToken, (req, res) => {
   client
     .query(
-      `INSERT INTO events(categoria, lugar, direccion, inicio, fin, virtual, dueno) VALUES($1, $2,$3, $4,$5,$6,$7) RETURNING id,categoria as event_category, lugar AS event_place, direccion AS event_address, inicio AS event_initial_date, fin AS event_final_date, virtual AS event_type;`,
+      `INSERT INTO events(event_name,categoria, lugar, direccion, inicio, fin, virtual, dueno) VALUES($1, $2,$3, $4,$5,$6,$7,$8) RETURNING id,event_name,categoria as event_category, lugar AS event_place, direccion AS event_address, inicio AS event_initial_date, fin AS event_final_date, virtual AS event_type;`,
       [
+        req.body.event_name,
         req.body.event_category,
         req.body.event_place,
         req.body.event_address,
@@ -98,7 +102,9 @@ app.post('/api/events/', authenticaToken, (req, res) => {
         req.user,
       ]
     )
-    .then((results) => res.json(JSON.parse(JSON.stringify(results.rows))))
+    .then((results) =>
+      res.status(200).json(JSON.parse(JSON.stringify(results.rows)))
+    )
     .catch((e) => console.log(e), res.status(400));
 });
 
@@ -106,10 +112,12 @@ app.delete('/api/events/:id', authenticaToken, function (req, res) {
   console.log(`user ${req.user} wants to delete`);
   client
     .query(
-      `DELETE FROM events WHERE id=$1 AND dueno=$2 RETURNING id,categoria as event_category, lugar AS event_place, direccion AS event_address, inicio AS event_initial_date, fin AS event_final_date, virtual AS event_type`,
+      `DELETE FROM events WHERE id=$1 AND dueno=$2 RETURNING id,event_name,categoria as event_category, lugar AS event_place, direccion AS event_address, inicio AS event_initial_date, fin AS event_final_date, virtual AS event_type`,
       [req.params.id, req.user]
     )
-    .then((results) => res.json(JSON.parse(JSON.stringify(results.rows))))
+    .then((results) =>
+      res.status(200).json(JSON.parse(JSON.stringify(results.rows)))
+    )
     .catch((e) => console.log(e));
 });
 
@@ -129,7 +137,9 @@ app.post('/api/create-user/', async function (req, res) {
           hashedPassword,
         ]
       )
-      .then((results) => res.json(JSON.parse(JSON.stringify(results.rows))))
+      .then((results) =>
+        res.status(200).json(JSON.parse(JSON.stringify(results.rows)))
+      )
       .catch((e) => console.log(e));
   } catch {
     res.status(500).send();

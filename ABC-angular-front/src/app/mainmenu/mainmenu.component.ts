@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ɵConsole } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable, throwError } from 'rxjs';
 import { catchError, retry } from 'rxjs/operators';
@@ -18,24 +18,21 @@ export class MainmenuComponent implements OnInit {
     this.http
       .get<Evento[]>(this.rootURL, this.httpOptions)
       .subscribe((data) => {
-        console.log(typeof data);
-        console.log(typeof data[0]);
-
-        console.log(data[0].event_initial_date);
-        let init_date: Date = new Date(data[0].event_initial_date);
-        console.log(init_date.toDateString());
-        //this.eventosArray = data;
         data.forEach((element) => {
           let init_date: Date = new Date(element.event_initial_date);
 
           let end_date: Date = new Date(element.event_final_date);
+          let end_date_string: string = end_date.toISOString().split('T')[0];
+          let init_date_string: string = init_date.toISOString().split('T')[0];
+
           this.eventosArray.push({
             id: element.id,
+            event_name: element.event_name,
             event_category: element.event_category,
             event_place: element.event_place,
             event_address: element.event_address,
-            event_initial_date: init_date.toDateString(),
-            event_final_date: end_date.toDateString(),
+            event_initial_date: init_date_string,
+            event_final_date: end_date_string,
             event_type: element.event_type,
           });
         });
@@ -45,24 +42,38 @@ export class MainmenuComponent implements OnInit {
     headers: new HttpHeaders(),
   };
 
-  postEvento(): void {
+  postEvento() {
     this.httpOptions.headers.set('Content-Type', 'application/json');
+    var evento_post: Evento_post = new Evento_post(this.selectedEvento);
 
     this.http
-      .post(this.rootURL, this.selectedEvento, this.httpOptions)
-      .subscribe((data) => {
-        console.log('resultado', data);
-      });
+      .post<Evento[]>(this.rootURL, evento_post, this.httpOptions)
+      .subscribe(
+        (data) => {
+          var evento: Evento = new Evento();
+          evento.id = data[0].id;
+          evento.event_name = data[0].event_name;
+          evento.event_place = data[0].event_place;
+          evento.event_address = data[0].event_address;
+          evento.event_initial_date = new Date(data[0].event_initial_date)
+            .toISOString()
+            .split('T')[0];
+          evento.event_final_date = new Date(data[0].event_final_date)
+            .toISOString()
+            .split('T')[0];
+          evento.event_category = data[0].event_category;
+          console.log(this.eventosArray);
+          this.eventosArray = this.eventosArray.reverse();
+          this.eventosArray.push(evento);
+          this.eventosArray = this.eventosArray.reverse();
+        },
+        (err) => console.log(err)
+      );
   }
   addOrEdit() {
     if (this.selectedEvento.id === 0) {
-      //post new
       this.postEvento();
-      this.selectedEvento.id = 0;
-      this.eventosArray.push(this.selectedEvento);
     } else {
-      //put con los datos especificados
-      console.log('aqui here');
       this.putEvento();
     }
     this.selectedEvento = new Evento();
@@ -70,7 +81,6 @@ export class MainmenuComponent implements OnInit {
 
   putEvento() {
     this.httpOptions.headers.set('Content-Type', 'application/json');
-
     this.http
       .put(
         this.rootURL + `/${this.selectedEvento.id}`,

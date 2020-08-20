@@ -23,11 +23,18 @@
             "styles": [
               "src/styles.css",
               "./node_modules/bootstrap/dist/css/bootstrap.min.css"
+              /*   "/bower_components/bootstrap/dist/css/bootstrap.min.css",
+              "/bower_components/eonasdan-bootstrap-datetimepicker/build/css/bootstrap-datetimepicker.min.css"
+            */
             ],
             "scripts": [
               "./node_modules/jquery/dist/jquery.min.js",
               "./node_modules/bootstrap/dist/js/bootstrap.min.js",
               "./node_modules/popper.js/dist/popper.min.js"
+              /* "./bower_components/jquery/dist/jquery.min.js",
+              "./bower_components/moment/min/moment.min.js",
+              "./bower_components/eonasdan-bootstrap-datetimepicker/build/js/bootstrap-datetimepicker.min.js"
+           */
             ]
           },
           "configurations": {

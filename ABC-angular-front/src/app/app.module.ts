@@ -16,6 +16,8 @@ import { FormsModule } from '@angular/forms';
 import { CreateUserComponent } from './create-user/create-user.component';
 import { AuthGuard } from './auth.guard';
 import { TokenInterceptorService } from './token-interceptor.service';
+import { AuthService } from './auth.service';
+
 @NgModule({
   schemas: [CUSTOM_ELEMENTS_SCHEMA, NO_ERRORS_SCHEMA],
   declarations: [
@@ -32,13 +34,14 @@ import { TokenInterceptorService } from './token-interceptor.service';
     AppRoutingModule,
     RouterModule.forRoot([
       { path: '', component: HomeComponent },
+      { path: 'home', component: HomeComponent },
+      { path: 'createuser', component: CreateUserComponent },
       { path: 'login', component: LoginComponent },
       {
         path: 'mainmenu',
         component: MainmenuComponent,
         canActivate: [AuthGuard],
       },
-      { path: 'createuser', component: CreateUserComponent },
     ]),
   ],
   providers: [
