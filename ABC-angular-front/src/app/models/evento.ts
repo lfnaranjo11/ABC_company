@@ -1,5 +1,4 @@
 export class Evento {
-  //event_category: string;
   id: number = 0;
   event_category: string = 'Clase';
   event_place: string;
@@ -10,7 +9,7 @@ export class Evento {
 }
 
 export class Evento_post {
-  //event_category: string;
+  // event_category: string;
   event_place: string;
   event_address: string;
   event_initial_date: string;

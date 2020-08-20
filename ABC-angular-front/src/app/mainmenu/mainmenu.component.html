@@ -1,44 +1,3 @@
-<nav class="navbar navbar-expand-lg navbar-light bg-light">
-  <div class="container">
-    <a class="navbar-brand" href="#">ABC company Eventos CRUD</a>
-    <button
-      class="navbar-toggler"
-      type="button"
-      data-toggle="collapse"
-      data-target="#navbarNav"
-      aria-controls="navbarNav"
-      aria-expanded="false"
-      aria-label="Toggle navigation"
-    >
-      <span class="navbar-toggler-icon"></span>
-    </button>
-    <div class="collapse navbar-collapse" id="navbarNav">
-      <ul class="navbar-nav">
-        <li class="nav-item">
-          <a class="nav-link" routerLink="/mainmenu" routerLinkActive="active"
-            >Eventos</a
-          >
-        </li>
-        <li class="nav-item">
-          <a class="nav-link" routerLink="/" routerLinkActive="active">Home</a>
-        </li>
-      </ul>
-      <ul class="navbar-nav ml-auto">
-        <li class="nav-item ml-auto">
-          <a class="nav-link" routerLink="/login" routerLinkActive="active"
-            >Log in</a
-          >
-        </li>
-        <li class="nav-item ml-auto">
-          <a class="nav-link" routerLink="/createuser" routerLinkActive="active"
-            >sign up</a
-          >
-        </li>
-      </ul>
-    </div>
-  </div>
-</nav>
-
 <div class="container">
   <div class="row">
     <div class="col-md-8 mt-4">
@@ -49,6 +8,7 @@
           (click)="openForEdit(evento)"
           [class.active]="evento === selectedEvento"
         >
+          Categoria: {{ evento.event_category }}
           {{ evento.id }}
           En:{{ evento.event_place }} Dirección:
           {{ evento.event_address }} Desde:
@@ -60,6 +20,23 @@
       <div class="card-body">
         <div class="card-tittle">Crear un evento</div>
         <div class="form-group">
+          <div class="form-group">
+            <label for="exampleFormControlSelect1"
+              >Selecciona la categoria</label
+            >
+            <select
+              [(ngModel)]="selectedEvento.event_category"
+              class="form-control"
+              id="exampleFormControlSelect1"
+            >
+              <option value="" selected disabled hidden>Choose here</option>
+              <option selected="selected" value="">---Please select---</option>
+              <option value="Seminario">Seminario</option>
+              <option value="Conferencia">Conferencia</option>
+              <option value="Congreso">Congreso</option>
+              <option value="Curso">Curso</option>
+            </select>
+          </div>
           <input
             type="text"
             [(ngModel)]="selectedEvento.event_place"
@@ -72,8 +49,6 @@
             placeholder="direccion"
             class="form-control"
           />
-          <input type="text" placeholder="fecha Inicial" class="form-control" />
-          <input type="text" placeholder="fecha  final" class="form-control" />
           <button (click)="addOrEdit()" class="btn-primary">Submit</button>
           <button
             *ngIf="selectedEvento.id !== 0"
