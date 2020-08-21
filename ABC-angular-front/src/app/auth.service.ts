@@ -21,8 +21,8 @@ export class AuthService {
   };
   usuario: UsuarioCorto = new UsuarioCorto();
   //rootURl = `http://${process.env.IP_BACK}:8080/api/api-auth`;
-  //rootURl = 'http://localhost:8080/api/api-auth';
-  rootURl = 'http://172.24.98.165:8080/api/api-auth';
+  rootURl = 'http://localhost:8080/api/api-auth';
+  //rootURl = 'http://172.24.98.165:8080/api/api-auth';
 
   getUserDetails(username, password) {
     this.usuario.username = username;

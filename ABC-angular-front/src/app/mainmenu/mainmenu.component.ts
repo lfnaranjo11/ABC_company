@@ -14,8 +14,8 @@ export class MainmenuComponent implements OnInit {
   eventosArray: Evento[] = [];
   selectedEvento: Evento = new Evento();
   //172.24.98.165
-  rootURL = 'http://172.24.98.165:8080/api/events';
-  //rootURL = 'http://localhost:8080/api/events';
+  //rootURL = 'http://172.24.98.165:8080/api/events';
+  rootURL = 'http://localhost:8080/api/events';
   constructor(private http: HttpClient) {
     this.http
       .get<Evento[]>(this.rootURL, this.httpOptions)
