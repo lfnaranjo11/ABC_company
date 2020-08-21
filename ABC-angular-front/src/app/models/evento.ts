@@ -6,7 +6,7 @@ export class Evento {
   event_address: string;
   event_initial_date: string = '2020-12-12';
   event_final_date: string = '2020-08-30';
-  event_type: Boolean = false;
+  event_type: string;
 }
 
 export class Evento_post {
@@ -17,7 +17,7 @@ export class Evento_post {
   event_address: string;
   event_initial_date: string;
   event_final_date: string;
-  event_type: Boolean;
+  event_type: string;
 
   constructor(evento_normal: Evento) {
     this.event_name = evento_normal.event_name;

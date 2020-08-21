@@ -8,11 +8,12 @@
           (click)="openForEdit(evento)"
           [class.active]="evento === selectedEvento"
         >
-          Categoria: {{ evento.event_category }}
-          {{ evento.id }}
-          En:{{ evento.event_place }} Dirección:
+          Nombre: {{ evento.event_name }} Categoria:
+          {{ evento.event_category }} En:{{ evento.event_place }} Dirección:
           {{ evento.event_address }} Desde:
           {{ evento.event_initial_date }} Hasta: {{ evento.event_final_date }}
+
+          Tipo: {{ evento.event_type }}
         </li>
       </ul>
     </div>
@@ -36,6 +37,21 @@
               <option value="Congreso">Congreso</option>
               <option value="Curso">Curso</option>
             </select>
+            <div class="form-group">
+              <label for="exampleFormControlInput1">Tipo de evento</label>
+              <select
+                [(ngModel)]="selectedEvento.event_type"
+                class="form-control"
+                id="exampleFormControlSelect1"
+              >
+                <option value="" selected disabled hidden>Choose here</option>
+                <option selected="selected" value=""
+                  >---Please select---</option
+                >
+                <option value="Virtual">Virtual</option>
+                <option value="Presencial">Presencial</option>
+              </select>
+            </div>
           </div>
           <input
             type="text"

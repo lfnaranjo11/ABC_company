@@ -3,6 +3,16 @@ require('dotenv').config();
 const { Client } = require('pg');
 const jwt = require('jsonwebtoken');
 const bycript = require('bcrypt');
+const multer = require('multer');
+const path = require('path');
+
+//const upload = multer({ dest: './event_thumbnails/' });
+var fs = require('fs');
+
+var dir_uploads = './event_thumbnails';
+if (!fs.existsSync(dir_uploads)) {
+  fs.mkdirSync(dir_uploads);
+}
 const client = new Client({
   user: 'miusuario',
   host: 'localhost',
@@ -10,9 +20,11 @@ const client = new Client({
   database: 'eventos',
   password: 'kc2h82T4',
 });
+
 const app = express();
 const port = 8080;
 var bodyParser = require('body-parser');
+
 app.use(function (req, res, next) {
   // Website you wish to allow to connect
   res.setHeader('Access-Control-Allow-Origin', '*');
@@ -33,8 +45,33 @@ app.use(function (req, res, next) {
   // Pass to next layer of middleware
   next();
 });
-app.post('/home', (req, res) => {
+
+let storage21 = multer.diskStorage({
+  destination: (req, file, cb) => {
+    cb(null, './event_thumbnails/');
+  },
+  filename: (req, file, cb) => {
+    req.file_extension = path.extname(file.originalname);
+    cb(
+      null,
+      'thumbnail' + Date.now() + req.id + path.extname(file.originalname)
+    );
+  },
+});
+
+const upload = multer({
+  storage: storage21,
+  inMemory: true,
+  onFileUploadData: function (file, data) {
+    result += data;
+  },
+  onFileUploadComplete: function (file) {
+    console.log(result); // This is what you want
+  },
+});
+app.post('/home', upload.single('thumby'), (req, res) => {
   //res.status(200).json({ resp: 'OK' });
+  console.log(req.body);
   res.status(404).json({ resp: 'ok' });
 });
 
@@ -192,6 +229,7 @@ function authenticaToken(req, resp, next) {
     next();
   });
 }
+
 app.listen(port, () => {
   client.connect().then(() => console.log('connected to database'));
   console.log(`company ABC server listening at http://localhost:${port}`);

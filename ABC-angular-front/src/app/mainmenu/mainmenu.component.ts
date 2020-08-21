@@ -54,6 +54,7 @@ export class MainmenuComponent implements OnInit {
           evento.id = data[0].id;
           evento.event_name = data[0].event_name;
           evento.event_place = data[0].event_place;
+          evento.event_type = data[0].event_type;
           evento.event_address = data[0].event_address;
           evento.event_initial_date = new Date(data[0].event_initial_date)
             .toISOString()
@@ -62,8 +63,6 @@ export class MainmenuComponent implements OnInit {
             .toISOString()
             .split('T')[0];
           evento.event_category = data[0].event_category;
-          console.log(this.eventosArray);
-          this.eventosArray = this.eventosArray.reverse();
           this.eventosArray.push(evento);
           this.eventosArray = this.eventosArray.reverse();
         },
