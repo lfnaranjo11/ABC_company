@@ -20,14 +20,11 @@ export class AuthService {
     }),
   };
   usuario: UsuarioCorto = new UsuarioCorto();
-
-  // httpOptions.headers.set('Authorization', 'my-new-auth-token');
-  rootURl = `http://172.24.98.165:8080/api/api-auth`;
+  //rootURl = `http://${process.env.IP_BACK}:8080/api/api-auth`;
   //rootURl = 'http://localhost:8080/api/api-auth';
+  rootURl = 'http://172.24.98.165:8080/api/api-auth';
+
   getUserDetails(username, password) {
-    //post these details to API server return user info if correct
-    // return this.http.post(this.rootURl, this.httpOptions);
-    //this.http.post(this.rootURl, this.httpOptions);
     this.usuario.username = username;
     this.usuario.password = password;
     return this.http

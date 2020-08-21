@@ -71,14 +71,7 @@
             placeholder="direccion"
             class="form-control"
           />
-          <input
-            type="date"
-            id="final"
-            name="trip-end"
-            [(ngModel)]="selectedEvento.event_final_date"
-            min="2000-01-01"
-            class="form-control"
-          />
+
           <input
             type="date"
             id="start"
@@ -88,14 +81,15 @@
             min="2000-01-01"
             class="form-control"
           />
-          <div class="form-group">
-            <label for="exampleFormControlFile1">Example file input</label>
-            <input
-              type="file"
-              class="form-control-file"
-              id="exampleFormControlFile1"
-            />
-          </div>
+          <input
+            type="date"
+            id="final"
+            name="trip-end"
+            [(ngModel)]="selectedEvento.event_final_date"
+            min="2000-01-01"
+            class="form-control"
+          />
+
           <button
             *ngIf="selectedEvento.id !== 0"
             (click)="addOrEdit()"

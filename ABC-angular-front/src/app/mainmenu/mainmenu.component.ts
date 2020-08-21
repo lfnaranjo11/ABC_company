@@ -13,7 +13,9 @@ import { Evento, Evento_post } from '../models/evento';
 export class MainmenuComponent implements OnInit {
   eventosArray: Evento[] = [];
   selectedEvento: Evento = new Evento();
-  rootURL = 'http://localhost:8080/api/events';
+  //172.24.98.165
+  rootURL = 'http://172.24.98.165:8080/api/events';
+  //rootURL = 'http://localhost:8080/api/events';
   constructor(private http: HttpClient) {
     this.http
       .get<Evento[]>(this.rootURL, this.httpOptions)

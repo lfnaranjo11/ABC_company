@@ -13,7 +13,9 @@ export class CreateUserComponent implements OnInit {
       'Content-Type': 'application/json',
     }),
   };
-  URL = 'http://localhost:8080/api/create-user';
+  //URL = 'http://localhost:8080/api/create-user';
+  URL = 'http://172.24.98.165:8080/api/create-user';
+
   nuevo_usuario = new Usuario();
   constructor(private http: HttpClient) {}
   create() {
